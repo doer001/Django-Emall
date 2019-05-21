@@ -1,0 +1,75 @@
+{% extends 'df_goods/goods_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}天天生鲜-{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="breadcrumb">
+        <a href="#">全部分类</a>
+        <span>></span>
+        <a href="{% url 'df_goods:goods_list' goods_type.id 1 1 %}">{{ title }}</a>
+    </div>
+
+    <div class="main_wrap clearfix">
+        <div class="l_wrap fl clearfix">
+            <div class="new_goods">
+                <h3>新品推荐</h3>
+                <ul>
+                    {% for good in news %}
+                        <li>
+                            <a href="{% url 'df_goods:good_detail' good.id %}"><img src="/static/{{ good.pic }}"
+                                                                                    alt="图片"></a>
+                            <h4><a href="{% url 'df_goods:good_detail' good.id %}">{{ good.title }}</a></h4>
+                            <div class="prize">￥{{ good.price }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="r_wrap fr clearfix">
+            <div class="sort_bar">
+                <a href="{% url 'df_goods:goods_list' goods_type.id 1 1 %}" {% if sort_id == 1 %}
+                   class="active" {% endif %}>默认</a>
+                <a href="{% url 'df_goods:goods_list' goods_type.id 1 2 %}" {% if sort_id == 2 %}
+                   class="active" {% endif %}>价格</a>
+                <a href="{% url 'df_goods:goods_list' goods_type.id 1 3 %}" {% if sort_id == 3 %}
+                   class="active" {% endif %}>销量</a>
+            </div>
+
+            <ul class="goods_type_list clearfix">
+                {% for good in page %}
+                    <li>
+                        <a href="{% url 'df_goods:good_detail' good.id %}"><img src="/static/{{ good.pic }}"
+                                                                                alt="图片"></a>
+                        <h4><a href="{% url 'df_goods:good_detail' good.id %}">{{ good.title }}</a></h4>
+                        <div class="operate">
+                            <span class="prize">￥{{ good.price }}</span>
+                            <span class="unit">{{ good.unit }}</span>
+                            <span class="unit">{{ good.sale }}</span>
+                            <a href="{% url 'df_cart:add' good.id 1 %}" class="add_goods" title="加入购物车"></a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="pagenation">
+                {% if page.has_previous %}
+                    <a href="{% url 'df_goods:goods_list' goods_type.id page.previous_page_number sort_id %}">上一页</a>
+                {% endif %}
+                {% for page_index in pages.page_range %}
+                    {% if page_index == page.number %}
+                        <a href="" class="active">{{ page_index }}</a>
+                    {% else %}
+                        <a href="{% url 'df_goods:goods_list' goods_type.id page_index sort_id %}">{{ page_index }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page.has_next %}
+                    <a href="{% url 'df_goods:goods_list' goods_type.id page.next_page_number sort_id %}">下一页</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

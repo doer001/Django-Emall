@@ -1,0 +1,47 @@
+{% extends 'df_goods/goods_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}天天生鲜-{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="#">{{ title }}</a>
+        <span>></span>
+        <a href="{% url 'df_goods:haystack_search' %}">{{ title }}</a>
+    </div>
+    <div class="main_wrap clearfix">
+        <ul class="goods_type_list clearfix">
+            {% for good in page.object_list %}
+                <li>
+                    <a href="{% url 'df_goods:good_detail' good.object.id %}"><img src="/static/{{ good.object.pic }}"
+                                                                            alt="图片"></a>
+                    <h4><a href="{% url 'df_goods:good_detail' good.object.id %}">{{ good.object.title }}</a></h4>
+                    <div class="operate">
+                        <span class="prize">￥{{ good.object.price }}</span>
+                        <span class="unit">{{ good.object.unit }}</span>
+                        <span class="unit">{{ good.object.sale }}</span>
+                        <a href="{% url 'df_cart:add' good.object.id 1 %}" class="add_goods" title="加入购物车"></a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="pagenation">
+            {% if page.has_previous %}
+                <a href="{% url 'df_goods:haystack_search' %}?q={{ query }}&amp;page={{ page.previous_page_number }}">上一页</a>
+            {% endif %}
+            {% for page_index in paginator.page_range %}
+                {% if page_index == page.number %}
+                    <a href="" class="active">{{ page_index }}</a>
+                {% else %}
+                    <a href="{% url 'df_goods:haystack_search' %}?q={{ query }}&amp;page={{ page_index }}">{{ page_index }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page.has_next %}
+                <a href="{% url 'df_goods:haystack_search' %}?q={{ query }}&amp;page={{ page.next_page_number }}">下一页</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

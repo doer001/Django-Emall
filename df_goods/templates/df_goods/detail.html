@@ -1,0 +1,136 @@
+{% extends 'df_goods/goods_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}天天生鲜-{{ goods.title }}{% endblock %}
+
+
+{% block css %}
+    <script>
+        function add() {
+            num = parseInt($('.num_show').val());
+            stock = parseInt($('#goods_stock').text());
+            if (num >= stock)
+                num = stock - 1;
+            $('.num_show').val(num + 1);
+            $('.num_show').blur();
+        }
+
+        function minus() {
+            num = parseInt($('.num_show').val());
+            if (num <= 1)
+                num = 2;
+
+            $('.num_show').val(num - 1);
+            $('.num_show').blur();
+        }
+
+        $(function () {
+            $('.num_show').blur(function () {
+                num = parseInt($('.num_show').val());
+                stock = parseInt($('#goods_stock').text());
+                if (num < 1)
+                    num = 1;
+                if (num > stock)
+                    num = stock;
+
+                price = parseFloat($('#price').text());
+                total = num * price;
+                $('.num_show').val(num);
+                $('#total').text(total.toFixed(2) + '元');
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="#">全部分类</a>
+        <span>></span>
+        <a href="{% url 'df_goods:goods_list' goods.type.id 1 1 %}">{{ goods.type }}</a>
+        <span>></span>
+        <a href="{% url 'df_goods:good_detail' goods_id %}">商品详情</a>
+    </div>
+
+    <div class="goods_detail_con clearfix">
+        <div class="goods_detail_pic fl"><img alt='图片' src="/static/{{ goods.pic }}"></div>
+
+        <div class="goods_detail_list fr">
+            <h3>{{ goods.title }}</h3>
+            <p>{{ goods.description }}</p>
+            <div class="prize_bar">
+                <span class="show_pirze">¥<em id="price">{{ goods.price }}</em></span>
+                <span class="show_unit">单  位：{{ goods.unit }}</span>
+                <span class="show_stock">库  存：<em id="goods_stock">{{ goods.stock }}</em></span>
+            </div>
+            <div class="goods_num clearfix">
+                <div class="num_name fl">数 量：</div>
+                <div class="num_add fl">
+                    <input type="text" class="num_show fl" value="1">
+                    <a href="javascript:add();" class="add fr">+</a>
+                    <a href="javascript:minus();" class="minus fr">-</a>
+                </div>
+            </div>
+            <div class="total">总价：<em id="total">{{ goods.price }}元</em></div>
+            <div class="operate_btn">
+                <a href="javascript:;" class="buy_btn">立即购买</a>
+                <a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_wrap clearfix">
+        <div class="l_wrap fl clearfix">
+            <div class="new_goods">
+                <h3>新品推荐</h3>
+                <ul>
+                    {% for good in news %}
+                        <li>
+                            <a href="{% url 'df_goods:good_detail' good.id %}"><img src="/static/{{ good.pic }}"
+                                                                                    alt="图片"></a>
+                            <h4><a href="{% url 'df_goods:good_detail' good.id %}">{{ good.title }}</a></h4>
+                            <div class="prize">￥{{ good.price }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="r_wrap fr clearfix">
+            <ul class="detail_tab clearfix">
+                <li class="active">商品介绍</li>
+                <li>评论</li>
+            </ul>
+
+            <div class="tab_content">
+                <dl>
+                    <dt>商品详情：</dt>
+                    <dd>{{ goods.content|safe }}</dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#add_cart').click(function () {
+
+                // 判断是否登录，若未登录，则提示先登录
+                if ($('.login_btn').text().indexOf('登录') >= 0) {
+                    alert('请先登录后再购买');
+                    location.href = '{% url 'df_user:login' %}';
+                    return;
+                }
+                num = parseInt($('.num_show').val());
+                $.get('/cart/{{ goods.id }}/' + num + '/', function (data) {
+                    $('#show_count').text(data.count);
+                });
+                alert('购物车添加成功');
+            });
+        });
+    </script>
+
+{% endblock %}
+

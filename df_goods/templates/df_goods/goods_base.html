@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}天天生鲜-首页{% endblock %}
+
+{% block search %}
+    <div class="search_bar clearfix">
+        <a href="{% url 'df_goods:index' %}" class="logo fl"><img alt="图片" src="{% static 'images/logo.png' %}"></a>
+        <div class="search_con fl">
+            <form action="{% url 'df_goods:haystack_search' %}" method="get" target="_blank">
+                <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+                <input type="submit" class="input_btn fr" value="搜索">
+            </form>
+        </div>
+        <div class="guest_cart fr">
+            <a href="{% url 'df_cart:cart' %}" class="cart_name fl">我的购物车</a>
+            <div class="goods_count fl" id="show_count">{{ cart_num }}</div>
+        </div>
+    </div>
+
+    <div class="navbar_con">
+        <div class="navbar clearfix">
+            <div class="subnav_con fl">
+                <h1>全部商品分类</h1>
+                <span></span>
+                <ul class="subnav">
+                    <li><a href="{% url 'df_goods:goods_list' 1 1 1 %}" class="fruit">新鲜水果</a></li>
+                    <li><a href="{% url 'df_goods:goods_list' 2 1 1 %}" class="seafood">海鲜水产</a></li>
+                    <li><a href="{% url 'df_goods:goods_list' 3 1 1 %}" class="meet">猪牛羊肉</a></li>
+                    <li><a href="{% url 'df_goods:goods_list' 4 1 1 %}" class="egg">禽类蛋品</a></li>
+                    <li><a href="{% url 'df_goods:goods_list' 5 1 1 %}" class="vegetables">新鲜蔬菜</a></li>
+                    <li><a href="{% url 'df_goods:goods_list' 6 1 1 %}" class="ice">速冻食品</a></li>
+                </ul>
+            </div>
+            <ul class="navlist fl">
+                <li><a href="{% url 'df_goods:index' %}">首页</a></li>
+                <li class="interval">|</li>
+                <li><a href="">手机生鲜</a></li>
+                <li class="interval">|</li>
+                <li><a href="">抽奖</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+

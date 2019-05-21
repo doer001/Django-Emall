@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    {% load static %}
+
+    <title>{% block title %} 天天生鲜 {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
+    {% block css %}{% endblock %}
+
+</head>
+<body>
+
+{% block nav %}
+    <div class="header_con">
+        <div class="header">
+            <div class="welcome fl">欢迎来到天天生鲜!</div>
+            <div class="fr">
+                {% if request.session.user_name|default:'' != '' %}
+                    <div class="login_btn fl">
+                        欢迎您：<em>{{ request.session.user_name }}</em>
+                        <span>|</span>
+                        <a href="{% url 'df_user:logout' %}">退出</a>
+                    </div>
+                {% else %}
+                    <div class="login_btn fl">
+                        <a href="{% url 'df_user:login' %}">登录</a>
+                        <span>|</span>
+                        <a href="{% url 'df_user:register' %}">注册</a>
+                    </div>
+                {% endif %}
+                <div class="user_link fl">
+                    <span>|</span>
+                    <a href="{% url 'df_user:info' %}">用户中心</a>
+                    <span>|</span>
+                    <a href="{% url 'df_cart:cart' %}">我的购物车</a>
+                    <span>|</span>
+                    <a href="{% url 'df_user:order' 1 %}">我的订单</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block search %}
+    <div class="search_bar clearfix">
+        <a href="{% url 'df_goods:index' %}" class="logo fl"><img alt="logo" src="{% static 'images/logo.png' %}"></a>
+        <div class=" sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;{{ title }}</div>
+        <div class="search_con fr">
+            <form action="{% url 'df_goods:haystack_search' %}" method="get" target="_blank">
+                <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+                <input type="submit" class="input_btn fr" value="搜索">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block foot %}
+    <div class="footer no-mp">
+        <div class="foot_link">
+            <a href="#">关于我们</a>
+            <span>|</span>
+            <a href="#">联系我们</a>
+            <span>|</span>
+            <a href="#">招聘人才</a>
+            <span>|</span>
+            <a href="#">友情链接</a>
+        </div>
+        <p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+        <p>电话：010-****888 京ICP备*******8号</p>
+    </div>
+{% endblock %}
+
+
+</body>
+</html>

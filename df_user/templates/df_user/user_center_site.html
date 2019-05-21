@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}天天生鲜-{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>用户中心</h3>
+            <ul>
+                <li><a href="{% url 'df_user:info' %}">· 个人信息</a></li>
+                <li><a href="{% url 'df_user:order' 1 %}">· 全部订单</a></li>
+                <li><a href="{% url 'df_user:site' %}" class="active">· 收货地址</a></li>
+            </ul>
+        </div>
+        <div class="right_content clearfix">
+            <h3 class="common_title2">收货地址</h3>
+            <div class="site_con">
+                <dl>
+                    <dt>当前地址：</dt>
+                    <dd>{{ user.address }}&nbsp;&nbsp;({{ user.full_name }})&nbsp;&nbsp;{{ user.phone }}</dd>
+                </dl>
+            </div>
+            <h3 class="common_title2">编辑地址</h3>
+            <div class="site_con">
+                <form action="{% url 'df_user:site' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form_group">
+                        <label for="full_name">收件人：</label>
+                        <input type="text" name="full_name" id="full_name" value="{{ user.full_name }}">
+                    </div>
+                    <div class="form_group form_group2">
+                        <label for="address">详细地址：</label>
+                        <textarea class="site_area" name="address" id="address">{{ user.address }}</textarea>
+                    </div>
+                    <div class="form_group">
+                        <label for="postcode">邮编：</label>
+                        <input type="text" name="postcode" id="postcode" value="{{ user.postcode }}">
+                    </div>
+                    <div class="form_group">
+                        <label for="phone">手机：</label>
+                        <input type="text" name="phone" id="phone" value="{{ user.phone }}">
+                    </div>
+
+                    <input type="submit" value="提交" class="info_submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}天天生鲜-{{ title }}{% endblock %}
+
+{% block content %}
+
+    <div class="main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>用户中心</h3>
+            <ul>
+                <li><a href="{% url 'df_user:info' %}">· 个人信息</a></li>
+                <li><a href="{% url 'df_user:order' 1 %}" class="active">· 全部订单</a></li>
+                <li><a href="{% url 'df_user:site' %}">· 收货地址</a></li>
+            </ul>
+        </div>
+        <div class="right_content clearfix">
+            <h3 class="common_title2">全部订单</h3>
+        {% if pages %}
+            {% for order in page %}
+                <ul class="order_list_th w978 clearfix">
+                    <li class="col01" style="text-align: left">{{ order.datetime }}</li>
+                    <li class="col02" style="text-align: center">{{ order.address }}</li>
+                    <li class="col03 stress" style="text-align: right">未支付</li>
+                </ul>
+
+                <table class="order_list_table w980">
+                    <tbody>
+                    <tr>
+                        <td width="55%">
+                            {% for order_detail in order.orderdetail_set.all %}
+                                <ul class="order_goods_list clearfix">
+                                    <li class="col01"><img alt="商品图片" src="/static/{{ order_detail.goods.pic }}">
+                                    </li>
+                                    <li class="col02">{{ order_detail.goods.title }}<em>{{ order_detail.price }}/{{ order_detail.goods.unit }}</em>
+                                    </li>
+                                    <li class="col03">{{ order_detail.count }}</li>
+                                    <li class="col04">运费：￥10</li>
+                                </ul>
+                            {% endfor %}
+                        </td>
+                        <td width="15%">{{ order.total }}</td>
+                        <td width="15%">待付款</td>
+                        <td width="15%"><a href="{% url 'df_order:pay' order.id %}" class="oper_btn">去付款</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% else %}
+            <p>暂无订单</p>
+        {% endif %}
+            <div class="pagenation">
+            {% if pages %}
+                {% if page.has_previous %}
+                    <a href="{% url "df_user:order" page.previous_page_number %}">上一页</a>
+                {% endif %}
+
+                {% for page_index in pages.page_range %}
+                    {% if page_index == page.number %}
+                        <a href="" class="active">{{ page_index }}</a>
+                    {% else %}
+                        <a href="{% url "df_user:order" page_index %}">{{ page_index }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <a href="{% url "df_user:order" page.next_page_number %}">下一页</a>
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
